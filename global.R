@@ -1,6 +1,8 @@
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(stringr)
+library(googleVis)
 
 files = list.files(pattern="*.csv")           #generate list of file names
 handle_each <- function(filename){
@@ -20,6 +22,18 @@ city4 = dfs[[4]]
 city5 = dfs[[5]]
 
 #data preprocessing
-city1p = mutate(city1, mean_PM = rowMeans(select(city1, starts_with("PM_")), na.rm = T))   # calculate average PM2.5 level across all sensors in a city
+#cacluate average 2.5 level across all sensors in a city, remove original individual PM2.5 sensor columns
+
+city1p = mutate(city1, mean_PM = rowMeans(select(city1, starts_with("PM_")), na.rm = T)) %>% select(., -starts_with("PM_"))    
+city2p = mutate(city2, mean_PM = rowMeans(select(city2, starts_with("PM_")), na.rm = T)) %>% select(., -starts_with("PM_")) 
+city3p = mutate(city3, mean_PM = rowMeans(select(city3, starts_with("PM_")), na.rm = T)) %>% select(., -starts_with("PM_")) 
+city4p = mutate(city4, mean_PM = rowMeans(select(city4, starts_with("PM_")), na.rm = T)) %>% select(., -starts_with("PM_")) 
+city5p = mutate(city5, mean_PM = rowMeans(select(city5, starts_with("PM_")), na.rm = T)) %>% select(., -starts_with("PM_")) 
+
+#combine all data into 1 data frame
+allCity = rbind(city1p, city2p, city3p, city4p, city5p)
+
+#remove NAs from PM2.5 column
+allCity = filter(allCity, !is.na(mean_PM))
 
 
