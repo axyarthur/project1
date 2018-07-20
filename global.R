@@ -34,7 +34,9 @@ city5p = mutate(city5, mean_PM = rowMeans(select(city5, starts_with("PM_")), na.
 allCity = rbind(city1p, city2p, city3p, city4p, city5p)
 
 #remove NAs from PM2.5 column
-allCity = filter(allCity, !is.na(mean_PM))       #data keeping all the time information, master df
+allCity = filter(allCity, !is.na(mean_PM))           #data keeping all the time information, master df
+allCity = mutate(allCity, date = paste(year, month, day, sep = '/'))   #get date information
+allCity = mutate(allCity, date = as.Date(date, format = "%Y/%m/%d"))
 
 #map options
 #slider to choose time interval, calculate mean within time interval, intensity of PM2.5 in each city. button to advance / rewind time interval
@@ -44,11 +46,16 @@ allCity = filter(allCity, !is.na(mean_PM))       #data keeping all the time info
 #PM2.5 time series (compare 5 citys, option to toggle plot for each city on/off)
 #Temperature time series next to PM 2.5 
 
-#plot options: choose time scale (day / month / year)
-#PM2.5 vs. temperature (scatter, choose year)
+#plot options: choose time scale (day / month) group by season
+#PM2.5 vs. temperature (scatter, choose year, choose city)
 #PM2.5 vs. humidity (scatter, per city, choose year)
-#PM2.5 vs. pressure ( scatter )
-#PM2.5 vs. season (bar graph)
+#PM2.5 vs. pressure (scatter, pre city, choose year)
 
 #historgram of PM2.5 each year / each city 
+#bar graph of mean / median PM25 level each year / each city
 
+#39.9042° N, 116.4074° E Beijing
+#31.2304° N, 121.4737° E Shanghai
+#41.8057° N, 123.4315° E Shenyang
+#30.5728° N, 104.0668° E Chengdu
+#23.1291° N, 113.2644° E Guangzhou

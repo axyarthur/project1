@@ -17,7 +17,7 @@ shinyUI(dashboardPage(
             tabItems(
               tabItem(tabName = "overview", 
                   fluidRow(
-                      tabBox(title = "Backgroun Information", id = 'bg tab', height = 250, 
+                      tabBox(id = 'bg tab', height = 250, 
                              tabPanel("Data"), 
                              tabPanel("Questions")
                              )
@@ -25,8 +25,29 @@ shinyUI(dashboardPage(
                            )
                       ),
               tabItem(tabName = "map", 'Map'),
-              tabItem(tabName = "series", 'Time Series'),
-              tabItem(tabName = "plots", 'Plots Here')
+              tabItem(tabName = "series", 
+                      fluidRow(plotOutput(outputId = 'series'))
+                      ),
+              tabItem(tabName = "plots", 
+                      fluidRow(htmlOutput(outputId = 'scatter')),
+                      fluidRow(column(width = 6, 
+                                      selectInput("dataIn", label = h4("PM 2.5 vs. "), 
+                                           choices = list("Temperature" = 'TEMP', "Humidity" = "HUMI", "Pressure" = "PRES"), 
+                                           selected = 'TEMP'),
+                                      selectInput("year", label = h4("Choose Year"), 
+                                           choices = list("2010" = 2010, "2011" = 2011, "2012" = 2012, "2013" = 2013, "2014" = 2014,
+                                                          "2015" = 2015), 
+                                           selected = 2010)),
+                               column(width = 6, 
+                                      selectInput("city", label = h4("Choose City"),
+                                                  choices = list("Beijing" = "Beijing", "Guangzhou" = "Guangzhou", 
+                                                  "Chengdu" = "Chengdu", "Shanghai" = "Shanghai", "Shenyang" = "Shenyang"),
+                                                  selected = 'Beijing'),
+                                      radioButtons("group", label = h4("Data Grouping"), choices = list("Daily" = 'day', "Monthly" = 'month'),
+                                                   selected = 'day')
+                                      )
+                              )
+                      )
             )
           )
 )
