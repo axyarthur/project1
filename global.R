@@ -34,6 +34,21 @@ city5p = mutate(city5, mean_PM = rowMeans(select(city5, starts_with("PM_")), na.
 allCity = rbind(city1p, city2p, city3p, city4p, city5p)
 
 #remove NAs from PM2.5 column
-allCity = filter(allCity, !is.na(mean_PM))
+allCity = filter(allCity, !is.na(mean_PM))       #data keeping all the time information, master df
 
+#map options
+#slider to choose time interval, calculate mean within time interval, intensity of PM2.5 in each city. button to advance / rewind time interval
+#show text / shade on map depending on season 
+
+#plots to make:
+#PM2.5 time series (compare 5 citys, option to toggle plot for each city on/off)
+#Temperature time series next to PM 2.5 
+
+#plot options: choose time scale (day / month / year)
+#PM2.5 vs. temperature (scatter, choose year)
+#PM2.5 vs. humidity (scatter, per city, choose year)
+#PM2.5 vs. pressure ( scatter )
+#PM2.5 vs. season (bar graph)
+
+#historgram of PM2.5 each year / each city 
 
