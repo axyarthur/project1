@@ -3,6 +3,7 @@ library(dplyr)
 library(ggplot2)
 library(stringr)
 library(googleVis)
+library(tidyr)
 
 files = list.files(pattern="*.csv")           #generate list of file names
 handle_each <- function(filename){
@@ -37,6 +38,7 @@ allCity = rbind(city1p, city2p, city3p, city4p, city5p)
 allCity = filter(allCity, !is.na(mean_PM))           #data keeping all the time information, master df
 allCity = mutate(allCity, date = paste(year, month, day, sep = '/'))   #get date information
 allCity = mutate(allCity, date = as.Date(date, format = "%Y/%m/%d"))
+
 
 #map options
 #slider to choose time interval, calculate mean within time interval, intensity of PM2.5 in each city. button to advance / rewind time interval

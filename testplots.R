@@ -1,7 +1,11 @@
 library(googleVis)
+library(tidyr)
 
+allCity2 = spread(allCity3, key = city, value = PM25)
 allCity3 = group_by(allCity, date, city) %>% summarise(., Temp = mean(TEMP), PM25 = mean(mean_PM))   # dataframe for time plots
+
 inputcity = "Beijing"
+
 my_options = list(hAxis = "{title: 'Time'}", vAxis = "{title: 'PM 2.5 Level'}", 
                   explorer = "{actions: ['dragToZoom', 'rightClickToReset']}")
   
@@ -22,8 +26,9 @@ groupvec = c('season', 'month', 'day')
 inputTScale1 == groupvec
 groupvec[inputTScale1 == groupvec]
 
-allCity4 = filter(allCity, city == inputcity, year == inputyear)    #dataframe for scatter plots
-
+allCity4 = filter(allCity, city == inputcity, year == inputyear)    #dataframe for scatter plots, histogram
+testplot2 = gvisHistogram(allCity4[,c('mean_PM', 'city')])
+plot(testplot2)
 #function to choose grouping options for plot
 
 if(inputTScale1 == 'day'){
