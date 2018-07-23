@@ -20,7 +20,7 @@ shinyServer(function(input,output){
     #scatter plot options
     scatter_options = list(hAxis = "{title: 'Selected Variable'}", vAxis = "{title: 'PM 2.5 Level'}",
                            explorer = "{actions: ['dragToZoom', 'rightClickToReset']}", title = "Scatter Plots of PM 2.5",
-                           width = 720)
+                           width = 720, height = 360)
     
     #output scatter plot
     output$scatter = renderGvis({ 
@@ -42,7 +42,6 @@ shinyServer(function(input,output){
     #organizing data for histogram
     plotdf3 = reactive({
       tempdf2 = filter(allCity, city == input$city, year == input$year) %>% group_by(., city, month, day) %>% summarise(., PM25 = mean(mean_PM))
-      tempdf2 = tempdf2[, 'PM25']        
     })
     
     #options for historgram plot
@@ -50,7 +49,23 @@ shinyServer(function(input,output){
                         lastBucketPercentile: 5}", title = "Histogram of Daily PM 2.5 Levels", width = 720)
     
     #output for historgram
-    output$histogram = renderGvis({
-      gvisHistogram(plotdf3(), options = hist_options)
+    output$histogram = renderPlot({
+      plotdf3() %>% ggplot(., aes(x = PM25)) + geom_histogram(fill = 'blue', color = 'black', binwidth = input$bin)
+    })
+    
+    #organizing data for mapping
+    mapdf = reactive({
+      dateVec = c(input$dates)
+      (allCity %>% filter(., dateVec[1] <= date & date <= dateVec[2]) %>% group_by(., city) %>% summarise(., PM25 = mean(mean_PM)) 
+      %>% mutate(.,latlong = case_when(city == 'Beijing' ~ '39.9042:116.4074', city == 'Chengdu' ~ '30.5728:104.0668', 
+                                      city == 'Guangzhou' ~ '23.1291:113.2644', city == 'Shenyang' ~ '41.8057:123.4315',
+                                      city == 'Shanghai' ~ '31.2304:121.4737') ))
+    })
+    #options for Map
+    map_options = list(region = "CN")
+    
+    #output for GeoMap
+    output$map = renderGvis({
+      gvisGeoChart(mapdf(), locationvar = 'latlong', colorvar = 'PM25', options = map_options)
     })
 })

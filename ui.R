@@ -21,24 +21,29 @@ shinyUI(dashboardPage(
                              tabPanel("Data"), 
                              tabPanel("Questions")
                              )
-                
                            )
                       ),
-              tabItem(tabName = "map", 'Map'),
+              tabItem(tabName = "map",
+                      fluidRow(
+                        htmlOutput(outputId = 'map')
+                        ),
+                      fluidRow(
+                        dateRangeInput("dates", label = h4("Date range"), start = '2010-01-01', end = '2010-12-31', 
+                                       min ='2010-01-01', max = '2015-12-31', startview = 'year'))
+                      ),
               tabItem(tabName = "series", 
                       fluidRow(htmlOutput(outputId = 'series')),
                       fluidRow(checkboxGroupInput("time_city", label = h4("Choose City"), 
                                                   choices = list("Beijing" = "Beijing", "Chengdu" = "Chengdu", "Guangzhou" = "Guangzhou",
                                                                  "Shanghai" = "Shanghai", "Shenyang" = "Shenyang"),
                                                   selected = "Beijing", inline = T, width = '450px')
-                               
                       )
                       ),
               tabItem(tabName = "plots", 
                       fluidRow(column(width = 6,
                                       htmlOutput(outputId = 'scatter')),
                                column(width = 6,
-                                      htmlOutput(outputId = 'histogram'))
+                                      plotOutput(outputId = 'histogram'))
                                ),
                       fluidRow(column(width = 3, 
                                       selectInput("dataIn", label = h4("PM 2.5 vs. "), 
@@ -57,7 +62,7 @@ shinyUI(dashboardPage(
                                                    selected = 'day')
                                       ),
                                column(width = 3,
-                                      numericInput("bin", label = h4("Bin Width"), value = 10)
+                                      sliderInput("bin", label = h4("Bin Width"), min = 2, max = 50, value = 10)
                                  
                                )
                               )
