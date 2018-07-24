@@ -24,7 +24,7 @@ shinyServer(function(input,output, session){
     #scatter plot options
     scatter_options = list(hAxis = "{title: 'Selected Variable'}", vAxis = "{title: 'PM 2.5 Level'}",
                            explorer = "{actions: ['dragToZoom', 'rightClickToReset']}", title = "Scatter Plots of PM 2.5",
-                           width = 800, height = 360, legend = "{textStyle: {fontSize: 12}}")
+                           width = 660, height = 320, legend = "{textStyle: {fontSize: 12}}")
     
     #output scatter plot
     output$scatter = renderGvis({ 
@@ -36,7 +36,7 @@ shinyServer(function(input,output, session){
         
     #options for time plots
     time_options = list(hAxis = "{title: 'Time'}", vAxis = "{title: 'PM 2.5 Level', gridlines: {count: -1}}", 
-                      explorer = "{actions: ['dragToZoom', 'rightClickToReset']}", width = 1400, height = 320, legend = "{textStyle:{fontSize: 12}}",
+                      explorer = "{actions: ['dragToZoom', 'rightClickToReset']}", width = 1200, height = 320, legend = "{textStyle:{fontSize: 12}}",
                       title = "PM 2.5 Over Time")
     
     #output for time series plots
@@ -52,7 +52,7 @@ shinyServer(function(input,output, session){
     
     #options for historgram plot, 
     hist_options = list(hAxis = "{title: 'PM 2.5 Level'}", vAxis = "{title: 'Frequency'}", historgram = "{bucketSize: 10, maxValue: 500, 
-                        lastBucketPercentile: 5}", title = "Histogram of Daily PM 2.5 Levels", width = 800, height = 360, 
+                        lastBucketPercentile: 5}", title = "Histogram of Daily PM 2.5 Levels", width = 660, height = 320, 
                         legend = "{textStyle: {fontSize: 12}}")
     
     #output for historgram
@@ -82,7 +82,7 @@ shinyServer(function(input,output, session){
                   
     #options for bar chart
     bar_options = list(hAxis = "{ticks: [2010,2011,2012,2013,2014,2015], title: 'Year', format: 'decimal'}", legend = "{textStyle: {fontSize: 12}}", 
-                       title = "Yearly Average PM 2.5 Levels", vAxis = "{title: 'PM 2.5 Levels'}", width = 1400)
+                       title = "Yearly Average PM 2.5 Levels", vAxis = "{title: 'PM 2.5 Levels'}", width = 1200)
     
     #output for bar chart
     output$barchart = renderGvis({
