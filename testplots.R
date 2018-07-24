@@ -18,8 +18,8 @@ my_options2 = list(hAxis = "{title: 'Time'}", vAxis = "{title: 'Temperature (C)'
 testplot2 = gvisLineChart(filter(allCity3, city == inputcity), xvar = 'date', yvar = 'Temp', options = my_options2)
 plot(testplot2)
 binw = 10
-inputyear = 2010
-inputcity = "Beijing"
+inputyear = 2011
+inputcity = "Guangzhou"
 inputTScale1 = 'day'
 inputTScale2 = 'month'
 inputTScale3 = 'season'
@@ -27,8 +27,8 @@ groupvec = c('season', 'month', 'day')
 inputTScale1 == groupvec
 groupvec[inputTScale1 == groupvec]
 
-allCity4 = filter(allCity, city == inputcity, year == inputyear)    #dataframe for scatter plots, histogram
-allcity5 = group_by(allCity4, month, day) %>% summarise(., PM25 = mean(mean_PM))
+allCity4 = filter(allCity, year == 2011, city == 'Guangzhou')    #dataframe for scatter plots, histogram
+allCity5 = group_by(allCity4, season, month, day) %>% summarise(., PM25 = mean(mean_PM))
 
 ggplot(allcity5, aes(x = PM25)) + geom_histogram(fill = 'blue', color = 'black', binwidth = binw)
 
@@ -41,9 +41,12 @@ if(inputTScale1 == 'day'){
     }else{
       allCity5 = group_by(allCity4, season, month)
     }
-inputData = 'temp'
 
-
+allCity2 = (mutate(allCity, season = case_when(season == 1 ~"Spring", season == 2 ~ "Summer", season == 3 ~ "Fall", season == 4 ~ "Winter")) %>% 
+            filter(., city == inputcity, year == inputyear) %>% group_by(., season, month, day) %>%
+            summarise(., DEWP = mean(DEWP), PRES = mean(PRES), TEMP = mean(TEMP), mean_PM = mean(mean_PM, na.rm = T)) %>% ungroup(.) %>% spread(., key = season, value = mean_PM) 
+            %>% select(., 'TEMP', one_of('Spring', 'Summer', 'Winter', 'Fall'))) 
+          
 allCity6 = summarise(allCity5, mean_Temp = mean(TEMP), mean_PM = mean(mean_PM))
 
 allCity7 = allCity6[, c('mean_Temp', 'mean_PM')]
@@ -77,5 +80,20 @@ plot(testplot4)
 data("Andrew")
 Andrew[]
 gvisG
+unique(group_by(allCity, year, season)[!is.na(allCity$mean_PM) & allCity$city == inputcity,'year'])
+test_choice2 = group_by(allCity, year, season, city) %>% summarise(., PM25 = mean(mean_PM))
+
+test_choice = unique(allCity[(!is.na(allCity$mean_PM) & allCity$city == inputcity), 'year'])
+
+#make bar graph
+allCity8 = allCity %>% group_by(., year, city) %>% summarise(., PM25 = mean(mean_PM, na.rm = T))
+
+testplot5 = ggplot(allCity8, aes(x = year, y = PM25)) + geom_col(aes(fill = city), position = 'dodge')
+plot(testplot5)
+
+#Further analysis: 
+#ANOVA test for dependence for scatter plots
+#show mean and skew for histograms
+unique(allCity$season)
 
 
